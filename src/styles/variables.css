@@ -1,0 +1,29 @@
+:root {
+  /* Colors */
+  --bg-primary: #0f0f0f;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #252525;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-muted: #666666;
+  
+  --accent-primary: #fbbf24; /* Amber-400 */
+  --accent-hover: #f59e0b;   /* Amber-500 */
+  --accent-secondary: #ef4444; /* Red-500 */
+  
+  --border-color: #333333;
+  
+  /* Typography */
+  --font-main: 'Outfit', sans-serif;
+  
+  /* Spacing */
+  --container-padding: 2rem;
+  --max-width: 1200px;
+  
+  /* Effects */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+}
