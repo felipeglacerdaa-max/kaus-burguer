@@ -7,7 +7,12 @@ import ProductModal from './ProductModal';
 const ProductCard = ({ product }) => {
     const { addToCart } = useCart();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const allIngredients = useMemo(() => db.getIngredients(), []);
+    const [allIngredients, setAllIngredients] = useState([]);
+
+    React.useEffect(() => {
+        const load = async () => setAllIngredients(await db.getIngredients());
+        load();
+    }, []);
 
     const getIngredientName = (id) => {
         const ing = allIngredients.find(i => i.id === id);

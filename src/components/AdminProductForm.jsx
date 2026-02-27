@@ -18,7 +18,10 @@ const AdminProductForm = ({ product, onSave, onCancel }) => {
     const [showIngForm, setShowIngForm] = useState(false);
 
     useEffect(() => {
-        setAllIngredients(db.getIngredients());
+        const load = async () => {
+            setAllIngredients(await db.getIngredients());
+        };
+        load();
         if (product) {
             setName(product.name);
             setDescription(product.description);
@@ -28,8 +31,8 @@ const AdminProductForm = ({ product, onSave, onCancel }) => {
         }
     }, [product]);
 
-    const refreshIngredients = () => {
-        setAllIngredients(db.getIngredients());
+    const refreshIngredients = async () => {
+        setAllIngredients(await db.getIngredients());
     };
 
     const toggleIngredient = (id) => {
@@ -40,26 +43,26 @@ const AdminProductForm = ({ product, onSave, onCancel }) => {
         );
     };
 
-    const handleAddIngredient = (e) => {
+    const handleAddIngredient = async (e) => {
         e.preventDefault();
         if (!newIngName) return;
 
-        db.addIngredient(newIngName, newIngPrice || 0);
+        await db.addIngredient(newIngName, newIngPrice || 0);
         setNewIngName('');
         setNewIngPrice('');
-        refreshIngredients();
+        await refreshIngredients();
         // Optional: auto-select the new ingredient?
     };
 
-    const handleDeleteIngredient = (id) => {
+    const handleDeleteIngredient = async (id) => {
         if (window.confirm('Tem certeza que deseja excluir este ingrediente? Isso não afetará produtos que já o utilizam, mas ele sumirá da lista.')) {
-            db.deleteIngredient(id);
-            refreshIngredients();
+            await db.deleteIngredient(id);
+            await refreshIngredients();
             setSelectedIngredients(prev => prev.filter(i => i !== id));
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const productData = {
             name,
@@ -70,9 +73,9 @@ const AdminProductForm = ({ product, onSave, onCancel }) => {
         };
 
         if (product) {
-            db.updateProduct({ ...productData, id: product.id });
+            await db.updateProduct({ ...productData, id: product.id });
         } else {
-            db.addProduct(productData);
+            await db.addProduct(productData);
         }
         onSave();
     };

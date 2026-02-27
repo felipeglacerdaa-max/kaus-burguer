@@ -10,8 +10,9 @@ const ProductModal = ({ product, isOpen, onClose, onAddToCart }) => {
     const [allIngredients, setAllIngredients] = useState([]);
 
     React.useEffect(() => {
+        const load = async () => setAllIngredients(await db.getIngredients());
         if (isOpen) {
-            setAllIngredients(db.getIngredients());
+            load();
         }
     }, [isOpen]);
 

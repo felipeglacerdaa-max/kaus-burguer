@@ -23,10 +23,10 @@ const CheckoutModal = ({ isOpen, onClose }) => {
         setAddress(prev => ({ ...prev, [name]: value }));
     };
 
-    const generateOrderMessage = () => {
+    const generateOrderMessage = async () => {
         const orderId = Math.floor(10000 + Math.random() * 90000);
-        const allIngredients = db.getIngredients();
-        const allProducts = db.getProducts();
+        const allIngredients = await db.getIngredients();
+        const allProducts = await db.getProducts();
 
         let itemsList = '';
         let extrasList = '';
@@ -76,9 +76,9 @@ Total: R$ ${cartTotal.toFixed(2)}
 Desde já agradecemos seu pedido, tenha uma ótima noite.`;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const message = generateOrderMessage();
+        const message = await generateOrderMessage();
         const encodedMessage = encodeURIComponent(message);
         const whatsappUrl = `https://wa.me/+553187112512?text=${encodedMessage}`;
 

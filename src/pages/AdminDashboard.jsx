@@ -10,8 +10,6 @@ const AdminDashboard = () => {
     const [ingredients, setIngredients] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
     const [currentProduct, setCurrentProduct] = useState(null);
-    const [showDbTools, setShowDbTools] = useState(false);
-    const [dbJson, setDbJson] = useState('');
     const [savingIng, setSavingIng] = useState(null); // ID of ingredient being saved
     const [newIngName, setNewIngName] = useState('');
     const [newIngPrice, setNewIngPrice] = useState('');
@@ -20,15 +18,15 @@ const AdminDashboard = () => {
         loadData();
     }, []);
 
-    const loadData = () => {
-        setProducts(db.getProducts());
-        setIngredients(db.getIngredients());
+    const loadData = async () => {
+        setProducts(await db.getProducts());
+        setIngredients(await db.getIngredients());
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         if (window.confirm('Tem certeza que deseja excluir este item?')) {
-            db.deleteProduct(id);
-            loadData();
+            await db.deleteProduct(id);
+            await loadData();
         }
     };
 
@@ -42,25 +40,25 @@ const AdminDashboard = () => {
         setIsEditing(true);
     };
 
-    const handleFormSubmit = () => {
+    const handleFormSubmit = async () => {
         setIsEditing(false);
         setCurrentProduct(null);
-        loadData();
+        await loadData();
     };
 
-    const handleAddIngredient = (e) => {
+    const handleAddIngredient = async (e) => {
         e.preventDefault();
         if (!newIngName) return;
-        db.addIngredient(newIngName, newIngPrice || 0);
+        await db.addIngredient(newIngName, newIngPrice || 0);
         setNewIngName('');
         setNewIngPrice('');
-        loadData();
+        await loadData();
     };
 
-    const handleDeleteIngredient = (id) => {
+    const handleDeleteIngredient = async (id) => {
         if (window.confirm('Excluir este adicional?')) {
-            db.deleteIngredient(id);
-            loadData();
+            await db.deleteIngredient(id);
+            await loadData();
         }
     };
 
@@ -70,12 +68,12 @@ const AdminDashboard = () => {
         ));
     };
 
-    const saveIngredient = (ing) => {
+    const saveIngredient = async (ing) => {
         setSavingIng(ing.id);
-        db.updateIngredient(ing);
-        setTimeout(() => {
+        await db.updateIngredient(ing);
+        setTimeout(async () => {
             setSavingIng(null);
-            loadData();
+            await loadData();
         }, 1000);
     };
 
@@ -84,16 +82,6 @@ const AdminDashboard = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
                 <h1 style={{ color: 'var(--accent-primary)', fontSize: '2rem' }}>Gerenciamento Kaus</h1>
                 <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-                    <button
-                        onClick={() => {
-                            const data = db.get();
-                            setDbJson(JSON.stringify(data, null, 2));
-                            setShowDbTools(true);
-                        }}
-                        style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-                    >
-                        <ImageIcon size={18} /> Dados
-                    </button>
                     <button onClick={logout} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#ff4444', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
                         <LogOut size={18} /> Sair
                     </button>
@@ -305,72 +293,7 @@ const AdminDashboard = () => {
                         </div>
                     </section>
 
-                    {showDbTools && (
-                        <div style={{
-                            position: 'fixed',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            backgroundColor: 'var(--bg-secondary)',
-                            padding: '2rem',
-                            borderRadius: 'var(--radius-lg)',
-                            zIndex: 2000,
-                            width: '90%',
-                            maxWidth: '600px',
-                            boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
-                            border: '1px solid var(--accent-primary)'
-                        }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                                <h2 style={{ fontSize: '1.2rem', color: 'var(--accent-primary)' }}>Backup do Sistema</h2>
-                                <button onClick={() => setShowDbTools(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
-                                    <X size={24} />
-                                </button>
-                            </div>
-                            <textarea
-                                value={dbJson}
-                                onChange={(e) => setDbJson(e.target.value)}
-                                style={{
-                                    width: '100%',
-                                    height: '250px',
-                                    backgroundColor: 'var(--bg-primary)',
-                                    color: 'var(--text-secondary)',
-                                    padding: '1rem',
-                                    borderRadius: 'var(--radius-sm)',
-                                    fontFamily: 'monospace',
-                                    fontSize: '0.8rem',
-                                    marginBottom: '1.5rem',
-                                    border: '1px solid var(--border-color)'
-                                }}
-                            />
-                            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
-                                <button
-                                    onClick={() => {
-                                        try {
-                                            const parsed = JSON.parse(dbJson);
-                                            db.save(parsed);
-                                            loadData();
-                                            alert('Dados sincronizados!');
-                                            setShowDbTools(false);
-                                        } catch (e) {
-                                            alert('Erro no JSON.');
-                                        }
-                                    }}
-                                    style={{ backgroundColor: '#10b981', color: 'white', padding: '0.75rem 1.5rem', borderRadius: 'var(--radius-md)', border: 'none', fontWeight: 'bold', cursor: 'pointer' }}
-                                >
-                                    Sincronizar
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(dbJson);
-                                        alert('Copiado!');
-                                    }}
-                                    style={{ backgroundColor: 'var(--accent-primary)', color: 'var(--bg-primary)', padding: '0.75rem 1.5rem', borderRadius: 'var(--radius-md)', border: 'none', fontWeight: 'bold', cursor: 'pointer' }}
-                                >
-                                    Copiar
-                                </button>
-                            </div>
-                        </div>
-                    )}
+
                 </div>
             )}
         </div>

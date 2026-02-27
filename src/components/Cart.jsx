@@ -15,6 +15,12 @@ const Cart = () => {
     } = useCart();
 
     const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+    const [allIngredients, setAllIngredients] = useState([]);
+
+    React.useEffect(() => {
+        const load = async () => setAllIngredients(await db.getIngredients());
+        if (isCartOpen) load();
+    }, [isCartOpen]);
 
     if (!isCartOpen) return null;
 
@@ -102,7 +108,7 @@ const Cart = () => {
                                             {item.customizations.removed && item.customizations.removed.length > 0 && (
                                                 <div style={{ color: 'var(--destructive-color)' }}>
                                                     Sem: {item.customizations.removed.map(id => {
-                                                        const ing = db.getIngredients().find(i => i.id === id);
+                                                        const ing = allIngredients.find(i => i.id === id);
                                                         return ing ? ing.name : id;
                                                     }).join(', ')}
                                                 </div>
@@ -110,7 +116,7 @@ const Cart = () => {
                                             {item.customizations.added && Object.keys(item.customizations.added).length > 0 && (
                                                 <div style={{ color: 'var(--success-color, #10b981)' }}>
                                                     {Object.entries(item.customizations.added).map(([id, qty]) => {
-                                                        const ing = db.getIngredients().find(i => i.id === id);
+                                                        const ing = allIngredients.find(i => i.id === id);
                                                         return `${qty}x ${ing ? ing.name : id}`;
                                                     }).join(', ')}
                                                 </div>

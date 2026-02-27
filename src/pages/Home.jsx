@@ -8,15 +8,12 @@ const Home = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const loadProducts = () => {
-      setProducts(db.getProducts());
+    const loadProducts = async () => {
+      const data = await db.getProducts();
+      setProducts(data);
     };
 
     loadProducts();
-
-    // Refresh when localStorage changes in another tab
-    window.addEventListener('storage', loadProducts);
-    return () => window.removeEventListener('storage', loadProducts);
   }, []);
 
   return (
