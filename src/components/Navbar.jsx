@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, User } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
@@ -29,7 +29,7 @@ const Navbar = () => {
                 }}>
                     SMASH<span style={{ color: 'var(--accent-primary)' }}>KAUS</span>
                 </Link>
-                <div>
+
                 {/* Centered iFood Button - Styles moved to index.css */}
                 <button
                     className="ifood-btn"
@@ -40,6 +40,8 @@ const Navbar = () => {
                     </svg>
                     Pedir no iFood
                 </button>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', zIndex: 2 }}>
                     <button
                         onClick={toggleCart}
                         style={{
