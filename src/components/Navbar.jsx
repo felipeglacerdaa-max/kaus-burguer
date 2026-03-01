@@ -29,7 +29,7 @@ const Navbar = () => {
                 }}>
                     SMASH<span style={{ color: 'var(--accent-primary)' }}>KAUS</span>
                 </Link>
-
+                <div>
                 {/* Centered iFood Button - Styles moved to index.css */}
                 <button
                     className="ifood-btn"
@@ -40,20 +40,6 @@ const Navbar = () => {
                     </svg>
                     Pedir no iFood
                 </button>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', zIndex: 2 }}>
-                    <Link to="/login" style={{
-                        color: 'var(--text-muted)',
-                        transition: 'color 0.2s',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        fontSize: '0.9rem'
-                    }}>
-                        <User size={18} />
-                        <span style={{ display: 'none', '@media (min-width: 768px)': { display: 'inline' } }}>Admin</span>
-                    </Link>
-
                     <button
                         onClick={toggleCart}
                         style={{
