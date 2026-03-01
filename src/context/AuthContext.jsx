@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '../lib/libsupabaseClient';
 
 const AuthContext = createContext(null);
 
@@ -7,25 +8,35 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const storedAuth = localStorage.getItem('kaus_auth');
-        if (storedAuth === 'true') {
-            setIsAuthenticated(true);
-        }
-        setLoading(false);
+        // Inicializa estado de auth via sessão ativa do Supabase
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setIsAuthenticated(!!session);
+            setLoading(false);
+        });
+
+        // Escuta mudanças de auth (login, logout, token refresh...)
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setIsAuthenticated(!!session);
+        });
+
+        return () => subscription.unsubscribe();
     }, []);
 
-    const login = (username, password) => {
-        if (username === 'kaus' && password === 'kaus') {
-            localStorage.setItem('kaus_auth', 'true');
-            setIsAuthenticated(true);
-            return true;
+    const login = async (email, password) => {
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+
+        if (error) {
+            return { success: false, error: error.message };
         }
-        return false;
+
+        return { success: true };
     };
 
-    const logout = () => {
-        localStorage.removeItem('kaus_auth');
-        setIsAuthenticated(false);
+    const logout = async () => {
+        await supabase.auth.signOut();
     };
 
     return (

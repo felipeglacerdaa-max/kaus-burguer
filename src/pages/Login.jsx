@@ -3,18 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('felipeglacerdaa@hotmail.com');
+    const [password, setPassword] = useState('kaus');
     const [error, setError] = useState('');
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (login(username, password)) {
+        setError('');
+        const result = await login(email, password);
+        if (result.success) {
             navigate('/admin');
         } else {
-            setError('Credenciais inválidas');
+            setError(result.error || 'Credenciais inválidas');
         }
     };
 
@@ -57,8 +59,8 @@ const Login = () => {
                         <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Usuário</label>
                         <input
                             type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             style={{
                                 width: '100%',
                                 padding: '0.75rem',
