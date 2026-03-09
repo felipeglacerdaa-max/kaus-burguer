@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../data/db';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LogOut, Plus, Trash2, Edit2, Image as ImageIcon, Save, Check, Package } from 'lucide-react';
 import AdminProductForm from '../components/AdminProductForm';
 
@@ -84,8 +84,8 @@ const AdminDashboard = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
                 <h1 style={{ color: 'var(--accent-primary)', fontSize: '2rem' }}>Gerenciamento Kaus</h1>
                 <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-                    <button 
-                        onClick={() => navigate('/admin/stock')}
+                    <Link 
+                        to="/admin/stock"
                         style={{ 
                             display: 'flex', 
                             alignItems: 'center', 
@@ -98,11 +98,12 @@ const AdminDashboard = () => {
                             cursor: 'pointer', 
                             fontWeight: 'bold',
                             fontSize: '0.9rem',
-                            transition: 'all 0.2s'
+                            transition: 'all 0.2s',
+                            textDecoration: 'none'
                         }}
                     >
                         <Package size={18} /> Estoque
-                    </button>
+                    </Link>
                     <button onClick={logout} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#ff4444', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
                         <LogOut size={18} /> Sair
                     </button>
