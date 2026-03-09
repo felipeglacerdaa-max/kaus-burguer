@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../data/db';
-import { LogOut, Plus, Trash2, Edit2, Image as ImageIcon, Save, Check } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { LogOut, Plus, Trash2, Edit2, Image as ImageIcon, Save, Check, Package } from 'lucide-react';
 import AdminProductForm from '../components/AdminProductForm';
 
 const AdminDashboard = () => {
     const { logout } = useAuth();
+    const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const [ingredients, setIngredients] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
@@ -82,6 +84,25 @@ const AdminDashboard = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
                 <h1 style={{ color: 'var(--accent-primary)', fontSize: '2rem' }}>Gerenciamento Kaus</h1>
                 <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+                    <button 
+                        onClick={() => navigate('/admin/stock')}
+                        style={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            gap: '0.5rem', 
+                            color: 'var(--accent-primary)', 
+                            background: 'rgba(251, 191, 36, 0.1)', 
+                            border: '1px solid var(--accent-primary)', 
+                            padding: '0.5rem 1rem',
+                            borderRadius: 'var(--radius-md)',
+                            cursor: 'pointer', 
+                            fontWeight: 'bold',
+                            fontSize: '0.9rem',
+                            transition: 'all 0.2s'
+                        }}
+                    >
+                        <Package size={18} /> Estoque
+                    </button>
                     <button onClick={logout} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#ff4444', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
                         <LogOut size={18} /> Sair
                     </button>

@@ -6,6 +6,7 @@ import AdminRoute from './components/AdminRoute';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
+import Stock from './pages/Stock';
 
 function App() {
   return (
@@ -20,6 +21,14 @@ function App() {
               element={
                 <AdminRoute>
                   <AdminDashboard />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/stock"
+              element={
+                <AdminRoute>
+                  <Stock />
                 </AdminRoute>
               }
             />
