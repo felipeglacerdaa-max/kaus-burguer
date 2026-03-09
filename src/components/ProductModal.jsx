@@ -43,7 +43,7 @@ const ProductModal = ({ product, isOpen, onClose, onAddToCart }) => {
     const handleAddExtra = (ingId, delta) => {
         setAddedIngredients(prev => {
             const currentQty = prev[ingId] || 0;
-            const newQty = Math.max(0, currentQty + delta);
+            const newQty = Math.max(0, Math.min(5, currentQty + delta));
             const newMap = { ...prev, [ingId]: newQty };
             if (newQty === 0) delete newMap[ingId];
             return newMap;
@@ -183,19 +183,22 @@ const ProductModal = ({ product, isOpen, onClose, onAddToCart }) => {
                                         <span style={{ width: '20px', textAlign: 'center', fontWeight: 'bold' }}>
                                             {addedIngredients[ing.id] || 0}
                                         </span>
-                                        <button
+                                         <button
                                             onClick={() => handleAddExtra(ing.id, 1)}
+                                            disabled={addedIngredients[ing.id] >= 5}
+                                            title={addedIngredients[ing.id] >= 5 ? "Limite de 5 atingido" : ""}
                                             style={{
                                                 width: '28px',
                                                 height: '28px',
                                                 borderRadius: '50%',
-                                                border: '1px solid var(--accent-primary)',
-                                                background: 'rgba(251, 191, 36, 0.1)',
-                                                color: 'var(--accent-primary)',
+                                                border: addedIngredients[ing.id] >= 5 ? '1px solid var(--border-color)' : '1px solid var(--accent-primary)',
+                                                background: addedIngredients[ing.id] >= 5 ? 'transparent' : 'rgba(251, 191, 36, 0.1)',
+                                                color: addedIngredients[ing.id] >= 5 ? 'var(--text-muted)' : 'var(--accent-primary)',
                                                 display: 'flex',
                                                 justifyContent: 'center',
                                                 alignItems: 'center',
-                                                cursor: 'pointer'
+                                                cursor: addedIngredients[ing.id] >= 5 ? 'not-allowed' : 'pointer',
+                                                opacity: addedIngredients[ing.id] >= 5 ? 0.3 : 1
                                             }}
                                         >
                                             <Plus size={14} />
